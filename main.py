@@ -27,6 +27,7 @@ HELP_TEXT   = f'''
 /start - {italic('запуск бота')}
 /sticker - {italic('Тест')}
 /photo - {italic('Концепция ЕИП ГосЭДО')}
+/video - {italic('Информация о ГИС ТОСЭД')}
  {link("ГИС ГосЭДО",'https://gosedo.ru/')} - {italic('официальный сайт')}
 
 '''
@@ -58,6 +59,13 @@ async def photo_command(message: types.Message):
     photo = InputFile("img/gosedo.png")
     # await bot.send_photo(message.from_user.id, photo="https://gosedo.ru/wp-content/uploads/2023/09/%D0%9A%D0%BE%D0%BD%D1%86%D0%B5%D0%BF%D1%86%D0%B8%D1%8F-%D0%95%D0%98%D0%9F-%D0%93%D0%BE%D1%81%D0%AD%D0%94%D0%9E.svg", caption="Концепция ЕИП ГосЭДО")
     await bot.send_photo(message.from_user.id, photo=photo, caption="Концепция ЕИП ГосЭДО")
+
+#Отравка видео пользователю
+@dp.message_handler(commands=['video'])
+async def photo_command(message: types.Message):
+    video = InputFile("video/torsed.mp4") #Ограничение на размер файла в 50Mb от Telegram
+    await bot.send_video(message.from_user.id, video=video, caption="Видео о ГИС ТОРСЭД")
+
 
 
 #Уведомление о запуске бота
