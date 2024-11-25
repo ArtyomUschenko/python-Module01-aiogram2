@@ -30,6 +30,7 @@ HELP_TEXT   = f'''
 /video - {italic('Информация о ГИС ТОСЭД')}
 /voice - {italic('Голосовое сообщение')}
 /group - {italic('Отправка пакета сообщений')}
+/note - {italic('Отправка видеосообщений')}
  {link("ГИС ГосЭДО",'https://gosedo.ru/')} - {italic('официальный сайт')}
 
 '''
@@ -73,6 +74,11 @@ async def photo_command(message: types.Message):
 async def voice_command(message: types.Message):
     voice = InputFile("audio/Планировщик задач.m4a")
     await bot.send_voice(message.from_user.id, voice=voice, caption="Голосовое сообщение")
+
+@dp.message_handler(commands=['note'])
+async def voice_command(message: types.Message):
+    note = InputFile("video/test.mp4")
+    await bot.send_video_note(message.from_user.id, video_note=note)
 
 
 @dp.message_handler(commands=['group'])
