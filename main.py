@@ -28,6 +28,7 @@ HELP_TEXT   = f'''
 /sticker - {italic('Тест')}
 /photo - {italic('Концепция ЕИП ГосЭДО')}
 /video - {italic('Информация о ГИС ТОСЭД')}
+/voice - {italic('Голосовое сообщение')}
  {link("ГИС ГосЭДО",'https://gosedo.ru/')} - {italic('официальный сайт')}
 
 '''
@@ -67,6 +68,11 @@ async def photo_command(message: types.Message):
     await bot.send_video(message.from_user.id, video=video, caption="Видео о ГИС ТОРСЭД")
 
 
+@dp.message_handler(commands=['voice'])
+async def voice_command(message: types.Message):
+    voice = InputFile("audio/Планировщик задач.m4a")
+    await bot.send_voice(message.from_user.id, voice=voice, caption="Голосовое сообщение")
+
 
 #Уведомление о запуске бота
 async def on_startup(_):
@@ -86,4 +92,4 @@ if __name__ == '__main__':
     executor.start_polling(dp, on_startup=on_startup)
 
 
-# 4
+# 8
