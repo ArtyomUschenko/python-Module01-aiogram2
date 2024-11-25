@@ -32,6 +32,7 @@ HELP_TEXT   = f'''
 /group - {italic('Отправка пакета сообщений')}
 /note - {italic('Отправка видеосообщений')}
 /document - {italic('Отправка документа ПП198')}
+/location- {italic('Отправка карту с адресом')}
  {link("ГИС ГосЭДО",'https://gosedo.ru/')} - {italic('официальный сайт')}
 
 '''
@@ -86,6 +87,10 @@ async def document_command(message: types.Message):
     document = InputFile("documents/ПП198.pdf")  #Отправка любого файла без сжатия
     await bot.send_document(message.from_user.id, document=document, caption="Постановление Правительства Российской Федерации от 17.02.2022 № 198")
 
+@dp.message_handler(commands=['location'])
+async def location_command(message: types.Message): #Отправка любого файла без сжатия
+    await bot.send_location(message.from_user.id, latitude=55.683249, longitude=37.487397)
+    await message.answer('улица Удальцова, 85, Москва, 119454')
 
 @dp.message_handler(commands=['group'])
 async def group_command(message: types.Message):
