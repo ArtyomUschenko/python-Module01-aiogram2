@@ -31,6 +31,7 @@ HELP_TEXT   = f'''
 /voice - {italic('Голосовое сообщение')}
 /group - {italic('Отправка пакета сообщений')}
 /note - {italic('Отправка видеосообщений')}
+/document - {italic('Отправка документа ПП198')}
  {link("ГИС ГосЭДО",'https://gosedo.ru/')} - {italic('официальный сайт')}
 
 '''
@@ -65,7 +66,7 @@ async def photo_command(message: types.Message):
 
 #Отравка видео пользователю
 @dp.message_handler(commands=['video'])
-async def photo_command(message: types.Message):
+async def video_command(message: types.Message):
     video = InputFile("video/torsed.mp4") #Ограничение на размер файла в 50Mb от Telegram
     await bot.send_video(message.from_user.id, video=video, caption="Видео о ГИС ТОРСЭД")
 
@@ -76,9 +77,14 @@ async def voice_command(message: types.Message):
     await bot.send_voice(message.from_user.id, voice=voice, caption="Голосовое сообщение")
 
 @dp.message_handler(commands=['note'])
-async def voice_command(message: types.Message):
+async def note_command(message: types.Message):
     note = InputFile("video/test.mp4")
     await bot.send_video_note(message.from_user.id, video_note=note)
+
+@dp.message_handler(commands=['document'])
+async def document_command(message: types.Message):
+    document = InputFile("documents/ПП198.pdf")  #Отправка любого файла без сжатия
+    await bot.send_document(message.from_user.id, document=document, caption="Постановление Правительства Российской Федерации от 17.02.2022 № 198")
 
 
 @dp.message_handler(commands=['group'])
