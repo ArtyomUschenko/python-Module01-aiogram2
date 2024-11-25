@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.markdown import bold,italic,link
-from aiogram.types import InputFile
+from aiogram.types import InputFile, MediaGroup
 import api_token
 
 bot = Bot(api_token.TOKEN) # токен
@@ -29,6 +29,7 @@ HELP_TEXT   = f'''
 /photo - {italic('Концепция ЕИП ГосЭДО')}
 /video - {italic('Информация о ГИС ТОСЭД')}
 /voice - {italic('Голосовое сообщение')}
+/group - {italic('Отправка пакета сообщений')}
  {link("ГИС ГосЭДО",'https://gosedo.ru/')} - {italic('официальный сайт')}
 
 '''
@@ -72,6 +73,14 @@ async def photo_command(message: types.Message):
 async def voice_command(message: types.Message):
     voice = InputFile("audio/Планировщик задач.m4a")
     await bot.send_voice(message.from_user.id, voice=voice, caption="Голосовое сообщение")
+
+
+@dp.message_handler(commands=['group'])
+async def group_command(message: types.Message):
+    media = MediaGroup()
+    media.attach_photo(InputFile("img/Лого.png", "Логотип"))
+    media.attach_photo(InputFile("img/gosedo.png", "Концепция ЕИП ГосЭДО"))
+    await bot.send_media_group(message.from_user.id, media=media)
 
 
 #Уведомление о запуске бота
