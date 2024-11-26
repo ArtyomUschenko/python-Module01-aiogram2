@@ -1,6 +1,7 @@
+from Tools.demo.spreadsheet import rjust
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.markdown import bold,italic,link
-from aiogram.types import InputFile, MediaGroup
+from aiogram.types import InputFile, MediaGroup, ContentType
 import api_token
 
 bot = Bot(api_token.TOKEN) # токен
@@ -114,8 +115,15 @@ async def echo_message(message: types.Message):
     await message.answer(f"Привет, {message.from_user.first_name}!\n\nЕсли нужна помощь, то введи команду /help")
     print(message)
 
+
+# Ответ бота на незнакомые команды со стикером. (Можно реализовать для всех команд с ключем ANY или на определенные VIDEO и т.д.)
+@dp.message_handler(content_types=ContentType.STICKER)
+async def unknown_message(message: types.Message):
+    await message.reply(f"Я не знаю, что ответить на команду")
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, on_startup=on_startup)
 
 
-# 8
+# 13
