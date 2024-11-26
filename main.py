@@ -1,7 +1,7 @@
 from Tools.demo.spreadsheet import rjust
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.markdown import bold,italic,link
-from aiogram.types import InputFile, MediaGroup, ContentType, ChatActions
+from aiogram.types import InputFile, MediaGroup, ContentType, ChatActions, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from aiohttp.hdrs import CONTENT_RANGE
 import asyncio
 
@@ -41,20 +41,31 @@ HELP_TEXT   = f'''
 
 '''
 
+keyBoard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=3)
+# one_time_keyboard #Одноразовая клавиатура, закрывается после выбора опции
+# resize_keyboard #Размер клавиатуры
+# row_width = 3 # количество строк в клавиатуре
+btn1 = KeyboardButton(text="/photo")
+btn2 = KeyboardButton(text="/help")
+btn3 = KeyboardButton(text="/voice")
+btn4 = KeyboardButton(text="/location")
+
+keyBoard.add(btn1, btn2, btn3, btn4)
+
 @dp.message_handler(commands=['help']) # команда /help
 async def help_command(message: types.Message):
-    await message.answer(HELP_TEXT, parse_mode="markdown")  #parse_mode="markdown" - вывод в markdown
+    await message.answer(HELP_TEXT, parse_mode="markdown", reply_markup=ReplyKeyboardRemove())  #parse_mode="markdown" - вывод в markdown
 
 
-@dp.message_handler(commands=['help']) # команда /help
-async def help_command(message: types.Message):
-    await bot.send_chat_action(message.from_user.id, "typing") # Отправка кнопки "Печатать"
-    await message.answer(HELP_TEXT, parse_mode="HTML")  #parse_mode="HTML" - вывод в HTML
+# @dp.message_handler(commands=['help']) # команда /help
+# async def help_command(message: types.Message):
+#     await bot.send_chat_action(message.from_user.id, "typing") # Отправка кнопки "Печатать"
+#     await message.answer(HELP_TEXT, parse_mode="HTML")  #parse_mode="HTML" - вывод в HTML
 
 
 @dp.message_handler(commands=['start']) # команда /start
 async def start_command(message: types.Message):
-    await message.reply('Привет, я бот, который может проконсультировать тебя о системе. 😅')
+    await bot.send_message(message.chat.id, "'Привет, я бот, который может проконсультировать тебя о системе. 😅'", reply_markup=keyBoard)
 
 
 # Отправка стикера пользователю
