@@ -101,6 +101,28 @@ async def location_command(message: types.Message): #Отправка любог
     await bot.send_location(message.from_user.id, latitude=55.683249, longitude=37.487397)
     await message.answer('улица Удальцова, 85, Москва, 119454')
 
+
+#Отправка сообщения в личку
+# @dp.message_handler()
+# async def echo(message: types.Message):
+#     await bot.send_message(message.from_user.id, message.text)
+
+#Отправка сообщения в чат, где было сообщения
+# @dp.message_handler()
+# async def echo(message: types.Message):
+#     await bot.send_message(message.chat.id, message.text)
+#     print(message)
+
+
+#Пересылка сообщений из лички в канал телеграм
+@dp.message_handler()
+async def echo(message: types.Message):
+    await bot.send_message("-1002383910528", message.text)
+    print(message)
+
+
+
+
 @dp.message_handler(commands=['group'])
 async def group_command(message: types.Message):
     media = MediaGroup()
@@ -118,16 +140,22 @@ async def on_startup(_):
 
 
 # Функция эхо, повторяет все сообщения пользователя
-@dp.message_handler()
-async def echo_message(message: types.Message):
-    await message.answer(f"Привет, {message.from_user.first_name}!\n\nЕсли нужна помощь, то введи команду /help")
-    print(message)
+# @dp.message_handler()
+# async def echo_message(message: types.Message):
+#     await message.answer(f"Привет, {message.from_user.first_name}!\n\nЕсли нужна помощь, то введи команду /help")
+#     print(message)
+
 
 
 # Ответ бота на незнакомые команды со стикером. (Можно реализовать для всех команд с ключем ANY или на определенные VIDEO и т.д.)
 @dp.message_handler(content_types=ContentType.STICKER)
 async def unknown_message(message: types.Message):
     await message.reply(f"Я не знаю, что ответить на команду")
+
+
+
+
+
 
 
 if __name__ == '__main__':
