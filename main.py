@@ -1,7 +1,10 @@
 from Tools.demo.spreadsheet import rjust
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.markdown import bold,italic,link
-from aiogram.types import InputFile, MediaGroup, ContentType
+from aiogram.types import InputFile, MediaGroup, ContentType, ChatActions
+from aiohttp.hdrs import CONTENT_RANGE
+import asyncio
+
 import api_token
 
 bot = Bot(api_token.TOKEN) # токен
@@ -45,6 +48,7 @@ async def help_command(message: types.Message):
 
 @dp.message_handler(commands=['help']) # команда /help
 async def help_command(message: types.Message):
+    await bot.send_chat_action(message.from_user.id, "typing") # Отправка кнопки "Печатать"
     await message.answer(HELP_TEXT, parse_mode="HTML")  #parse_mode="HTML" - вывод в HTML
 
 
@@ -81,6 +85,10 @@ async def voice_command(message: types.Message):
 @dp.message_handler(commands=['note'])
 async def note_command(message: types.Message):
     note = InputFile("video/test.mp4")
+    await bot.send_chat_action(message.from_user.id, ChatActions.RECORD_VIDEO_NOTE) #Информирования пользователя, что идет запись видео
+    await asyncio.sleep(3) #Ожидание 3
+    await bot.send_chat_action(message.from_user.id, ChatActions.UPLOAD_VIDEO_NOTE) #Информирования пользователя, что идет загрузка видео
+    await asyncio.sleep(3)  # Ожидание 3
     await bot.send_video_note(message.from_user.id, video_note=note)
 
 @dp.message_handler(commands=['document'])
