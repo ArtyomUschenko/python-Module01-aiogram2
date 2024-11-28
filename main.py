@@ -4,6 +4,7 @@ from Tools.demo.spreadsheet import rjust
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.markdown import bold,italic,link
 from aiogram.types import InputFile, MediaGroup, ContentType, ChatActions, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+import logging
 
 from random import randint
 from aiohttp.hdrs import CONTENT_RANGE
@@ -16,7 +17,8 @@ import api_token
 bot = Bot(api_token.TOKEN) # токен
 dp = Dispatcher(bot) # диспетчер
 
-
+#Логирования
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO, filename="bot.log")
 
 # Вариант с поддержкой HTML
 # --------------------------------------------------
@@ -58,6 +60,11 @@ btn4 = KeyboardButton(text="/location")
 
 keyBoard.add(btn1, btn2, btn3, btn4)
 
+@dp.errors_handler()
+async def error_handler(update: types.Update, exception: Exception):
+    logging.error(f"Ошибка: {update}: {exception}")
+
+
 @dp.message_handler(commands=['help']) # команда /help
 async def help_command(message: types.Message):
     await message.answer(HELP_TEXT, parse_mode="markdown", reply_markup=ReplyKeyboardRemove())  #parse_mode="markdown" - вывод в markdown
@@ -72,6 +79,10 @@ async def help_command(message: types.Message):
 @dp.message_handler(commands=['start']) # команда /start
 async def start_command(message: types.Message):
     await bot.send_message(message.chat.id, "'Привет, я бот, который может проконсультировать тебя о системе. 😅'", reply_markup=keyBoard)
+    logging.info(f"Пользователь {message.from_user.username} запустил бота")
+
+
+
 
 
 #Инлай-клавитатура
