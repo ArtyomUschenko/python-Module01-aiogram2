@@ -1,9 +1,15 @@
+from distutils.command.install_lib import install_lib
+
 from Tools.demo.spreadsheet import rjust
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.markdown import bold,italic,link
-from aiogram.types import InputFile, MediaGroup, ContentType, ChatActions, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import InputFile, MediaGroup, ContentType, ChatActions, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+
+from random import randint
 from aiohttp.hdrs import CONTENT_RANGE
 import asyncio
+
+from babel.plural import test_next_token
 
 import api_token
 
@@ -67,6 +73,25 @@ async def help_command(message: types.Message):
 async def start_command(message: types.Message):
     await bot.send_message(message.chat.id, "'Привет, я бот, который может проконсультировать тебя о системе. 😅'", reply_markup=keyBoard)
 
+
+#Инлай-клавитатура
+@dp.message_handler(commands=['inline'])
+async def start_command(message: types.Message):
+    inline_keyboard = InlineKeyboardMarkup(row_width=2)
+    i_btn1 = InlineKeyboardButton(text="Ссылка на сайт", url="https://gosedo.ru/")
+    i_btn2 = InlineKeyboardButton(text="Тестовое сообщение с 0 до 10", callback_data="random_value")
+    inline_keyboard.add(i_btn1, i_btn2)
+    await bot.send_message(message.chat.id, "Выберите кнопку:", reply_markup=inline_keyboard)
+
+
+#Действия на кнопку
+@dp.callback_query_handler(text_contains="random_value")
+async def send_random_value(callback: CallbackQuery):
+    rand_value = randint(0, 10)
+    await bot.send_message(callback.message.chat.id, "Вы нажали на кнопку")
+    await bot.send_message(callback.message.chat.id, text=f'{rand_value}')
+    # await callback.answer(cache_time=1) #Время cache
+    await callback.answer(text=f'{rand_value}') #Всплывающее окно
 
 # Отправка стикера пользователю
 @dp.message_handler(commands=['sticker']) # команда /sticker
@@ -165,12 +190,7 @@ async def unknown_message(message: types.Message):
 
 
 
-
-
-
-
 if __name__ == '__main__':
     executor.start_polling(dp, on_startup=on_startup)
 
 
-# 13
